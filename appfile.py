@@ -47,17 +47,21 @@ def index():
 def enter_info():
     form = CityForm()
     if form.validate_on_submit():
-        return "hello world" # replace this with code to save the form data in the database
+        #return "hello world" # replace this with code to save the form data in the database
         ## COMMENTS TO TRANSLATE:
         # Get the form data in variables
-
+        cityname = form.name.data
+        temp = form.temp.data
         # Create a City object with the correct data populated
-
-        # Add the city object to the db.session
-
-        # Commit the db session
-
-        # return a redirect to the URL for this function to add another...
+        possible_city = City.query.filter_by(name=cityname).first()
+        if possible_city is None:
+            city = City(name=cityname,temp_fah=temp)
+            # Add the city object to the db.session
+            db.session.add(city)
+            # Commit the db session
+            db.session.commit()
+            # return a redirect to the URL for this function to add another...
+        return redirect(url_for('enter_info'))
         # OR, if you prefer, you could return a redirect to the function that renders the page showing all the cities and temperatures!
     return render_template('formshow.html',form=form)
 
